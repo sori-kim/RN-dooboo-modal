@@ -1,12 +1,13 @@
-import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
+// import ModalApp from './src/components/Modal/index';
+// import Screen from './src/components/NewModal/index';
+import ModalPage from './src/components/InhancedModal/index';
 
 export default function App() {
   return (
     <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
-      <StatusBar style="auto" />
+      <ModalPage />
     </View>
   );
 }
