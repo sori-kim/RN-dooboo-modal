@@ -1,8 +1,6 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-// import ModalApp from './src/components/Modal/index';
-// import Screen from './src/components/NewModal/index';
-import ModalPage from './src/components/InhancedModal/index';
+import ModalPage from './src/components/Modal/index';
 
 export default function App() {
   return (
