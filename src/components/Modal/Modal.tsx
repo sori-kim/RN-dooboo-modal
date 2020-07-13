@@ -3,6 +3,7 @@ import { useRef, useState } from 'react';
 import { Animated, ViewStyle, GestureResponderEvent } from 'react-native';
 import styled from 'styled-components/native';
 import CloseButton from './CloseButton';
+import ModalPicker from '../NewModalPicker/ModalPicker';
 
 interface Props {
     visible?: boolean | undefined;
@@ -14,6 +15,8 @@ interface Props {
     isAnimated?: boolean | undefined;
     animationType?: string | undefined;
     animationSpeed?: number | undefined;
+    data?: {} | undefined;
+    initialValue?: string | undefined;
 }
 
 function Modal(props : Props) {
@@ -24,32 +27,27 @@ function Modal(props : Props) {
       onClose,
       children,
       style,
-      isAnimated,
       animationType, 
-      animationSpeed 
+      animationSpeed,
+      data,
+      initialValue 
     } = props
 
-    const onbackDropPress = () =>  {
-      if (e.target === e.currentTarget) {
-        onClose(e)
-      }
-    }
   
-    const close = () => {
+    const close = (e) => {
       if (onClose) {
         onClose(e)
       }
     }
 
     const fadeAnimation = useRef(new Animated.Value(0)).current;
-    const defaultAnimation = useRef(new Animated.Value(500)).current;
+    const defaultAnimation = useRef(new Animated.Value(0)).current;
     const zoomAnimation =  useRef(new Animated.Value(0.8)).current; 
-    // const [type, setType] = useState("")
 
 
     if (animationType === "default"){
         Animated.timing(defaultAnimation, {
-            toValue: -50,
+            toValue: 0,
             duration: animationSpeed,
             useNativeDriver: true
           }).start();
@@ -71,9 +69,11 @@ function Modal(props : Props) {
           }).start();
     }
 
+  
+
     return (
       <>
-        <ModalOverlay visible={visible} onPress={backDropClosable? onbackDropPress : null} />
+        <ModalOverlay visible={visible} onPress={backDropClosable? close : null} />
         <ModalWrapper
           as={Animated.View} 
           visible={visible}
@@ -89,8 +89,15 @@ function Modal(props : Props) {
         >
           <ModalInner style={style}>
             { closable && 
-             <CloseButton handlePress={close} />
+             <CloseButton handlePress={close}  />
                 }
+            { data && 
+            <ModalPicker 
+              data={data} 
+              visible={visible} 
+              initialValue={initialValue}
+              children={children} /> 
+               }
               {children}  
           </ModalInner>
         </ModalWrapper>
@@ -98,16 +105,8 @@ function Modal(props : Props) {
     )
   }
 
+export default Modal;
 
-
-const ModalWrapper = styled.View`
-  opacity: ${(props) => (props.visible ? 1  : 0)};
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  z-index: 1000;
-`
 
 const ModalOverlay = styled.TouchableOpacity`
     z-index: -1;
@@ -117,6 +116,15 @@ const ModalOverlay = styled.TouchableOpacity`
     top: 0;
     left: 0;
     background-color: rgba(0,0,0,0.7);
+`
+
+const ModalWrapper = styled.View`
+  opacity: ${(props) => (props.visible ? 1  : 0)};
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 1000;
 `
 
 const ModalInner = styled.View`
@@ -138,4 +146,3 @@ Modal.defaultProps = {
     animationSpeed: 1000
   }
 
-export default Modal;
