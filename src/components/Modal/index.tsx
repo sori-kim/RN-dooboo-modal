@@ -16,6 +16,7 @@ function ModalPage(props: Props) {
     
     const [modalVisible, setModalVisible] = useState<boolean>(false)
     const [isAnimated, setIsAnimated] = useState<boolean>(false)
+    const [value, setValue] = useState("Choose!");
 
     const openModal = () => {
       setModalVisible(true)
@@ -23,6 +24,14 @@ function ModalPage(props: Props) {
     const closeModal = () => {
       setModalVisible(false)
     }
+
+    const data = [
+      { section: true, label: 'Fruits' },
+      { label: 'Red Apples' },
+      { label: 'Cherries' },
+      { label: 'Cranberries', accessibilityLabel: 'Tap here for cranberries' },
+      { label: 'Vegetable', customKey: 'Not a fruit' }
+  ];
 
     return (
       <>
@@ -42,11 +51,13 @@ function ModalPage(props: Props) {
             isAnimated={isAnimated} 
             animationType={"default"}
             animationSpeed={700}
+            data={data}
+            initialValue={value}
             >
-             <Text 
+             {/* <Text 
                 style={[ textStyle, {color: "#088EDF", fontWeight: '600', textAlign: 'center'}]}>
                 Hello, I am Modal 🤘🏻
-             </Text>  
+             </Text>   */}
           </Modal>
         }
       </>
