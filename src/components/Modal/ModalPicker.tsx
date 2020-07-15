@@ -7,11 +7,9 @@ function ModalPicker (props){
 
   const {
     value,
-    setValue
+    setValue,
+    setIsAnimated
   } = props
-
-  console.log("modalPicker value>>", value)
-
 
 
     return(
@@ -21,6 +19,7 @@ function ModalPicker (props){
        onValueChange={(itemValue, itemIndex)=>{
          setValue(itemValue)
          alert(`Selected!`)
+         setIsAnimated(false)
        }}
       >
         {

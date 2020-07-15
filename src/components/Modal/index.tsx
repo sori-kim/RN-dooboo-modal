@@ -2,6 +2,7 @@ import * as React from 'react';
 import { useState } from 'react';
 import { Text, TouchableOpacity, TextStyle, ViewStyle } from 'react-native';
 import Modal from './Modal';
+import styled from 'styled-components/native';
 
 interface Props {
   style?: ViewStyle | undefined;
@@ -33,20 +34,28 @@ function ModalPage(props: Props) {
     { label: 'Song' },
   ];
 
+  const Container = styled.View`
+    flex: 1;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+  `;
+
+  const ModalOpenButton = styled.TouchableOpacity`
+    width: 250;
+    height: 70;
+    background-color: #088EDF;
+    border-radius: 5;
+    justify-content: center;
+    align-items: center;
+    z-index: -9;
+    position: absolute;
+  `
+
   return (
-    <>
-      <TouchableOpacity
-        style={[
-          {
-            width: 250,
-            height: 70,
-            backgroundColor: '#088EDF',
-            borderRadius: 5,
-            justifyContent: 'center',
-            alignItems: 'center',
-            zIndex: -9,
-          },
-        ]}
+    <Container>
+      <ModalOpenButton
         onPress={() => {
           setIsAnimated(true);
           openModal();
@@ -58,7 +67,7 @@ function ModalPage(props: Props) {
           ]}>
           {value}
         </Text>
-      </TouchableOpacity>
+      </ModalOpenButton>
       {modalVisible && (
         <Modal
           visible={modalVisible}
@@ -67,9 +76,10 @@ function ModalPage(props: Props) {
           onClose={closeModal}
           style={style}
           isAnimated={isAnimated}
+          setIsAnimated={setIsAnimated}
           animationType={'default'}
           animationSpeed={700}
-          mode={'default'}
+          mode={'modalPicker'}
           data={data}
           initialValue={value}
           value={value}
@@ -83,7 +93,7 @@ function ModalPage(props: Props) {
           </Text>
         </Modal>
       )}
-    </>
+    </Container>
   );
 }
 

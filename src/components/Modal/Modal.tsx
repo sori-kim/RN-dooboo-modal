@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { useRef} from 'react';
-import { Animated, ViewStyle} from 'react-native';
+import { Animated, ViewStyle, TouchableOpacity} from 'react-native';
 import styled from 'styled-components/native';
-import CloseButton from './CloseButton';
-import ModalPicker from '../NewModalPicker/ModalPicker';
+import ModalPicker from './ModalPicker';
+
 
 interface Props {
   visible?: boolean | undefined;
@@ -24,35 +24,44 @@ interface Props {
 
 function Modal(props: Props): React.ReactElement {
   const {
-    visible,
-    closable,
-    backDropClosable,
+    visible = false,
+    closable = true,
+    backDropClosable = true,
     onClose,
     children,
     style,
-    isAnimated,
-    animationType,
-    animationSpeed,
-    mode,
+    isAnimated = true,
+    setIsAnimated,
+    animationType = 'default',
+    animationSpeed = 700,
+    mode = 'default',
     data,
     initialValue,
     value,
     setValue,
   } = props;
 
-  const close = (e): void => {
+const close = (e:any): void => {
     if (onClose) {
       onClose(e);
     }
   };
 
+ function CloseButton () {
+    return(
+        <TouchableOpacity onPress={onClose}>
+            <StyledBtn source={require('../../../assets/close.png')} />
+        </TouchableOpacity>
+    )
+ };
+
+  const defaultAnimation = useRef(new Animated.Value(300)).current;
   const fadeAnimation = useRef(new Animated.Value(0)).current;
-  const defaultAnimation = useRef(new Animated.Value(0)).current;
   const zoomAnimation = useRef(new Animated.Value(0.8)).current;
 
   if (isAnimated && animationType === 'default') {
     Animated.timing(defaultAnimation, {
-      toValue: 0,
+      toValue: 10,
       duration: animationSpeed,
       useNativeDriver: true,
     }).start();
@@ -84,11 +93,12 @@ function Modal(props: Props): React.ReactElement {
         as={Animated.View}
         visible={visible}
         style={[
-          animationType === 'default'
+          isAnimated && animationType === 'default'
             ? { transform: [{ translateY: defaultAnimation }] }
             : null,
-          animationType === 'fadeIn' ? { opacity: fadeAnimation } : null,
-          animationType === 'zoom'
+          isAnimated && animationType === 'fadeIn' 
+            ? { opacity: fadeAnimation } : null,
+          isAnimated && animationType === 'zoom'
             ? { transform: [{ scale: zoomAnimation }] }
             : null,
         ]}>
@@ -101,6 +111,8 @@ function Modal(props: Props): React.ReactElement {
               setValue={setValue}
               value={value}
               initialValue={initialValue}
+              isAnimated={isAnimated}
+              setIsAnimated={setIsAnimated}
             />
           )}
           {children}
@@ -139,14 +151,11 @@ const ModalInner = styled.View`
   margin: 0 auto;
   padding: 40px 20px;
   top: -30%;
+  
 `;
 
-Modal.defaultProps = {
-  visible: false,
-  closable: true,
-  backDropClosable: true,
-  isAnimated: true,
-  animationType: 'default',
-  animationSpeed: 1000,
-  mode: 'default',
-};
+const StyledBtn = styled.Image`
+width: 20px;
+height: 20px;
+align-self: flex-end;
+`;
